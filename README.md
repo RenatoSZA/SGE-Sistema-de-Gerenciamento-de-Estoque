@@ -20,9 +20,9 @@ O Sistema de Gerenciamento de Estoque foi desenvolvido para auxiliar empresas no
 - MySQL
 
 GitHub da Equipe
- https://github.com/RenatoSZA
- https://github.com/Daphinne
- https://github.com/alineaguiargondim
- https://github.com/gabryel544
- https://github.com/dassa0
- https://github.com/Maria-Santa22
+ - https://github.com/RenatoSZA
+ - https://github.com/Daphinne
+ - https://github.com/alineaguiargondim
+ = https://github.com/gabryel544
+ - https://github.com/dassa0
+ - https://github.com/Maria-Santa22
