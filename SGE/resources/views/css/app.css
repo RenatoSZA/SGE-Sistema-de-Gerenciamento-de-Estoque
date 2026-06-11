@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Montserrat', sans-serif;
+    --color-brand-yellow: #E9CB76;
+    --color-brand-brown: #4B3631;
+    --color-brand-gray: #7D7A71;
+}
+@utility bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
