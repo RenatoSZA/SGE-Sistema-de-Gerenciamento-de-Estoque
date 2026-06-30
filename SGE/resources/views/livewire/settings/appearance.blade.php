@@ -1,8 +1,9 @@
 <?php
 
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new class extends Component {
+new #[Layout('layouts.sge')] class extends Component {
     //
 }; ?>
 

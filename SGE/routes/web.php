@@ -33,6 +33,9 @@ Route::middleware([\App\Http\Middleware\CheckAdminOrManager::class])->group(func
     
     Route::get('/historico', [\App\Http\Controllers\StockMovementController::class, 'index'])->name('stock.history');
     Route::get('/suporte', [\App\Http\Controllers\SupportController::class, 'index'])->name('support.index');
+    
+    Route::post('/alerts', [\App\Http\Controllers\AlertController::class, 'store'])->name('alerts.store');
+    Route::delete('/alerts/{alert}', [\App\Http\Controllers\AlertController::class, 'destroy'])->name('alerts.destroy');
 });
 
 

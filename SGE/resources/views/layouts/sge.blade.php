@@ -51,6 +51,7 @@
         
         <!-- Main Area (Dynamic) -->
         @yield('content')
+        {{ $slot ?? '' }}
         
     </div>
     
