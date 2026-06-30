@@ -52,7 +52,7 @@
                 
                 <div class="mt-8 text-center flex flex-col gap-1">
                     <p class="text-white text-[10px] font-bold">Esqueceu sua senha ou é seu primeiro login?</p>
-                    <a href="#" class="text-brand-yellow text-[10px] font-bold no-underline hover:underline hover:brightness-110 transition-all">Clique aqui.</a>
+                    <a href="{{ route('password.request') }}" class="text-brand-yellow text-[10px] font-bold no-underline hover:underline hover:brightness-110 transition-all">Clique aqui.</a>
                 </div>
             </div>
             

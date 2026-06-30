@@ -24,9 +24,18 @@ Route::post('/login', [\App\Http\Controllers\SiteController::class, 'login'])->n
 Route::post('/logout-custom', [\App\Http\Controllers\SiteController::class, 'logout'])->name('site.logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::middleware([\App\Http\Middleware\CheckAdminOrManager::class])->group(function () {
-        Route::get('/cadastro-funcionario', [\App\Http\Controllers\EmployeeController::class, 'create'])->name('employees.create');
-        Route::post('/cadastro-funcionario', [\App\Http\Controllers\EmployeeController::class, 'store'])->name('employees.store');
+Route::middleware([\App\Http\Middleware\CheckAdminOrManager::class])->group(function () {
+        Route::resource('employees', \App\Http\Controllers\EmployeeController::class)->except(['show']);
     });
+
+    Route::resource('products', \App\Http\Controllers\ProductController::class)->except(['show']);
+    Route::post('products/{product}/adjust-stock', [\App\Http\Controllers\ProductController::class, 'adjustStock'])->name('products.adjustStock');
+    
+    Route::get('/historico', [\App\Http\Controllers\StockMovementController::class, 'index'])->name('stock.history');
+    Route::get('/suporte', [\App\Http\Controllers\SupportController::class, 'index'])->name('support.index');
 });
+
+
+
+
 require __DIR__.'/auth.php';

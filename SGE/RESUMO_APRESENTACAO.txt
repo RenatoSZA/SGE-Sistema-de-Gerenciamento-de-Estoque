@@ -1,0 +1,107 @@
+================================================================================
+                    SGE - SISTEMA DE GERENCIAMENTO DE ESTOQUE
+                 RESUMO TÉCNICO DETALHADO PARA APRESENTAÇÃO
+================================================================================
+
+1. O QUE É O SGE?
+--------------------------------------------------------------------------------
+O SGE (Sistema de Gerenciamento de Estoque) é uma aplicação web focada no 
+controle prático e visual de produtos, entradas, saídas e gestão de 
+funcionários. O objetivo principal é oferecer uma experiência de usuário (UX) 
+altamente intuitiva, onde todas as informações cruciais estão a poucos cliques, 
+eliminando navegações complexas e mantendo tudo em uma única tela de forma ágil.
+
+
+2. ANATOMIA DAS TECNOLOGIAS E FRAMEWORKS
+--------------------------------------------------------------------------------
+O projeto foi construído sobre um ecossistema moderno e robusto:
+
+- LARAVEL (Framework PHP):
+  É a espinha dorsal do projeto. O Laravel oferece tudo que uma aplicação 
+  robusta precisa "fora da caixa": roteamento, proteção contra ataques (CSRF, 
+  XSS, SQL Injection), validação de dados simples e sistemas de sessão seguros.
+
+- ELOQUENT ORM (Object-Relational Mapping):
+  É a ferramenta do Laravel para interagir com o banco de dados sem precisar 
+  escrever SQL puro. Cada tabela do banco tem um "Model" correspondente (ex: 
+  tabela `users` é mapeada pela classe `User`). Isso permite fazer buscas e 
+  inserções de forma limpa. Exemplo: `User::where('matricula', ...)->first()`.
+
+- VITE (Frontend Build Tool):
+  Substituiu ferramentas antigas como o Webpack. O Vite é um empacotador de 
+  arquivos incrivelmente rápido que compila nosso Tailwind CSS e arquivos 
+  JavaScript. Durante o desenvolvimento, ele utiliza o HMR (Hot Module Replacement),
+  atualizando o navegador instantaneamente assim que alteramos o código.
+
+- BLADE (Template Engine):
+  O motor de renderização visual do Laravel. Ele pega os dados do backend e os 
+  injeta no HTML de forma segura e elegante usando diretivas como `@if`, 
+  `@foreach` e variáveis duplas `{{ $variavel }}`. Os arquivos terminam em 
+  `.blade.php` e são compilados em PHP puro no servidor para máxima performance.
+
+- TAILWIND CSS:
+  Um framework CSS utilitário. Em vez de criar arquivos CSS gigantescos, o 
+  Tailwind nos permite usar classes diretamente no HTML (ex: `bg-brand-yellow 
+  rounded-3xl p-6`). Isso agiliza a criação da identidade visual e evita 
+  conflitos de estilo.
+
+
+3. ESTRUTURA E LÓGICA: O PADRÃO MVC
+--------------------------------------------------------------------------------
+O SGE adota a arquitetura MVC (Model-View-Controller) para manter o código limpo:
+- MODELS (Modelo): Regras de negócio e comunicação com o Banco de Dados.
+- VIEWS (Visão): A interface do usuário construída com Blade e Tailwind.
+- CONTROLLERS (Controlador): Onde a lógica real acontece. Recebe o clique/ação 
+  do usuário, processa (salva/busca no Model) e devolve a resposta (View).
+
+
+4. LÓGICA DE AUTENTICAÇÃO E CADASTRO (PONTOS CHAVES NO CÓDIGO)
+--------------------------------------------------------------------------------
+O controle de acesso é um dos pontos mais importantes do código, implementado 
+nos controllers `SiteController` e `EmployeeController`.
+
+A. Lógica de Login (`SiteController`):
+- O sistema não usa email para login, usa uma "Matrícula" personalizada.
+- Validação Regex estrita: O login valida se a matrícula atende à regra exigida 
+  (inicia com F, G ou A seguido de exatos 8 números, ex: F20260001).
+- Segurança de Sessão: Em caso de sucesso (`auth()->attempt()`), o Laravel 
+  automaticamente regenera o ID da sessão (`regenerate()`) para prevenir 
+  ataques de "Session Fixation".
+
+B. Lógica de Cadastro e Matrícula Inteligente (`EmployeeController`):
+- O sistema não exige que o administrador crie a matrícula manualmente. Ela é 
+  gerada dinamicamente via código durante o `store()`:
+  1. Prefixo Baseado em Cargo: 'F' para Funcionário, 'G' para Gerente, 'A' para Admin.
+  2. Ano Corrente: Captura o ano atual (ex: 2026).
+  3. Sequência Automática: O Eloquent busca no banco o último usuário cadastrado 
+     naquele ano com aquele prefixo e soma +1 na sequência final (ex: de 0001 para 0002).
+- Permissões (Hierarquia): Há uma lógica (`if`) que impede ativamente que um 
+  "Gerente" cadastre um "Administrador", protegendo a escala de acesso.
+- Senha Padrão: Todo novo funcionário recebe a senha padrão gerada em Hash 
+  (`Mudar@123`), que não fica exposta no banco de dados.
+
+
+5. IDENTIDADE VISUAL E DESIGN (UI/UX)
+--------------------------------------------------------------------------------
+O design do SGE é focado em contraste, modernidade e produtividade:
+- Paleta de Cores: "Brand Yellow" (#E9CB76) e "Brand Brown" (#4B3631) ditam o 
+  ritmo do sistema, gerando um contraste vibrante que não cansa a vista.
+- Navegação "Single Page" Visual: O cabeçalho (Header) e o menu esquerdo (Sidebar) 
+  são estáticos. Todo o conteúdo interativo ocorre na área central através de 
+  cards arredondados com barras de rolagem customizadas (Custom Scrollbars), 
+  evitando que a página inteira role, passando a sensação de se estar usando 
+  um aplicativo nativo/desktop.
+- Componentes Dinâmicos: Status de entrada e saída exibidos em cores verde e 
+  vermelho ajudam a visualizar dados complexos em frações de segundo.
+
+
+6. PONTOS FORTES E DESTAQUES TÉCNICOS
+--------------------------------------------------------------------------------
+- Segurança contra Vulnerabilidades: Proteções embutidas do Laravel impedem a 
+  maioria dos ciberataques padrões contra formulários web.
+- Integração Rápida: A dupla Laravel (Backend) + Tailwind/Vite (Frontend) permite 
+  desenvolvimento de telas em velocidade recorde, mantendo a consistência do design.
+- UI Otimizada para Retenção: Foi evitada a abordagem tradicional de "tabelas 
+  brancas sem graça". A interface premium do SGE engaja o usuário e facilita 
+  seu treinamento para uso da ferramenta.
+================================================================================
