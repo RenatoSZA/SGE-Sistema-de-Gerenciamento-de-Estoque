@@ -44,31 +44,62 @@
         </div>
         
         <!-- Corpo Tabela -->
-        <div class="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-1 pr-1">
-            
+        <!-- Loop de Produtos -->
+        <div class="flex flex-col gap-2 overflow-y-auto pr-2 custom-scrollbar flex-1">
             @forelse($products as $product)
-                <div class="bg-white/5 hover:bg-white/10 transition-colors rounded-lg px-4 py-3 flex items-center text-sm text-white font-medium group border border-transparent hover:border-white/20">
-                    <div class="w-[10%] pl-2 opacity-70">#{{ str_pad($product->id, 3, '0', STR_PAD_LEFT) }}</div>
-                    <div class="w-[30%] font-bold text-brand-yellow truncate pr-2">{{ $product->name }}</div>
-                    <div class="w-[20%] truncate pr-2">{{ $product->sector }}</div>
-                    <div class="w-[20%] truncate pr-2">{{ $product->brand }}</div>
-                    <div class="w-[10%] text-center">
-                        @if($product->quantity <= 5)
-                            <span class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-500/30">{{ $product->quantity }}</span>
+                <div class="flex items-center gap-2 hover:bg-white/5 p-1 rounded-lg transition-colors cursor-default">
+                    
+                    <!-- Quantidade (com alerta visual) -->
+                    <div class="w-16 flex justify-center">
+                        @if($product->quantity <= $product->min_quantity)
+                            <div class="bg-red-500 text-white font-bold text-xs w-full py-1 rounded text-center shadow-[0_0_8px_rgba(239,68,68,0.6)] animate-pulse" title="Estoque Baixo">
+                                {{ $product->quantity }}
+                            </div>
                         @else
-                            <span class="bg-white/10 px-3 py-1 rounded-full text-xs font-bold">{{ $product->quantity }}</span>
+                            <div class="bg-brand-light-brown/60 text-brand-brown font-bold text-xs w-full py-1 rounded text-center">
+                                {{ $product->quantity }}
+                            </div>
                         @endif
                     </div>
-                    <div class="w-[10%] flex justify-center gap-2">
-                        <a href="{{ route('products.edit', $product) }}" class="p-1.5 bg-brand-yellow/20 text-brand-yellow rounded hover:bg-brand-yellow hover:text-brand-brown transition-colors" title="Gerenciar">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                        </a>
+                    
+                    <!-- Nome -->
+                    <div class="flex-1 bg-brand-light-brown/60 text-brand-brown font-bold text-xs px-3 py-2 rounded-sm truncate">
+                        {{ strtoupper($product->name) }}
                     </div>
+                    
+                    <!-- Marca -->
+                    <div class="w-1/4 bg-brand-light-brown/60 text-brand-brown font-bold text-xs px-3 py-2 rounded-sm truncate hidden md:block">
+                        {{ strtoupper($product->brand) }}
+                    </div>
+
+                    <!-- Setor -->
+                    <div class="w-1/4 bg-brand-light-brown/60 text-brand-brown font-bold text-xs px-3 py-2 rounded-sm truncate hidden md:block">
+                        {{ strtoupper($product->sector) }}
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="w-32 flex gap-1 justify-end pr-1">
+                        @if(auth()->user()->nivel_acesso === 'Admin' || auth()->user()->nivel_acesso === 'Gerente')
+                            <!-- Editar -->
+                            <a href="{{ route('products.edit', $product->id) }}" class="p-1.5 bg-brand-yellow text-brand-brown rounded hover:bg-white hover:text-brand-brown transition-colors shadow-sm" title="Editar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </a>
+                        @endif
+                        
+                        <!-- Ajustar Estoque (Modal/Opção) - Pode ser acessível por Padrão e Gerente/Admin -->
+                        <button x-data x-on:click="$dispatch('open-stock-modal', {{ $product->id }})" class="p-1.5 bg-white/10 text-white rounded hover:bg-brand-yellow hover:text-brand-brown transition-colors shadow-sm" title="Ajustar Estoque">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                        </button>
+                    </div>
+                    
                 </div>
             @empty
-                <div class="text-white/50 text-center py-6">Nenhum produto encontrado.</div>
+                <div class="flex flex-col items-center justify-center opacity-50 m-auto mt-10">
+                    <svg class="w-16 h-16 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <p class="text-white text-center text-lg font-bold">Nenhum produto cadastrado.</p>
+                    <p class="text-white/70 text-center text-sm mt-1">Clique no botão acima para adicionar um novo.</p>
+                </div>
             @endforelse
-            
         </div>
     </div>
     

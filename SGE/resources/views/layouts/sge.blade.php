@@ -23,10 +23,10 @@
     </header>
     
     <!-- Main Content Area -->
-    <div class="flex-1 flex p-6 gap-6 w-full max-w-[1400px] mx-auto h-[calc(100vh-60px)]">
+    <div class="flex-1 flex flex-col md:flex-row p-4 md:p-6 gap-4 md:gap-6 w-full max-w-[1400px] mx-auto h-[calc(100vh-60px)]">
         
         <!-- Sidebar -->
-        <aside class="w-[80px] bg-brand-brown rounded-3xl p-4 flex flex-col gap-4 items-center h-full shadow-lg shrink-0">
+        <aside class="w-full md:w-[80px] h-auto md:h-full overflow-x-auto md:overflow-visible bg-brand-brown rounded-3xl p-3 md:p-4 flex flex-row md:flex-col gap-2 md:gap-4 justify-between md:justify-start items-center shadow-lg shrink-0 z-20 custom-scrollbar">
             <!-- 1. Perfil/Editar -->
             <a href="{{ route('settings.profile') }}" class="w-12 h-12 rounded-xl transition-colors shadow-inner flex items-center justify-center group {{ request()->routeIs('settings.*') ? 'bg-brand-yellow text-brand-brown' : 'bg-brand-light-brown/80 hover:bg-brand-light-brown text-brand-brown opacity-70 group-hover:opacity-100' }}" title="Perfil">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
@@ -71,5 +71,40 @@
             background: rgba(255, 255, 255, 0.4);
         }
     </style>
+    
+    <!-- Global Toast Notification System -->
+    <div x-data="{ toasts: [] }" 
+         @toast.window="toasts.push($event.detail); setTimeout(() => { toasts.shift() }, 4000)"
+         class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none">
+        <template x-for="(toast, index) in toasts" :key="index">
+            <div x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform translate-x-8"
+                 x-transition:enter-end="opacity-100 transform translate-x-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 transform translate-x-0"
+                 x-transition:leave-end="opacity-0 transform translate-x-8"
+                 class="px-5 py-3 rounded-xl font-bold text-sm shadow-2xl flex items-center gap-2 pointer-events-auto max-w-sm border border-black/10"
+                 :class="toast.type === 'success' ? 'bg-green-400 text-green-900' : (toast.type === 'error' ? 'bg-red-400 text-red-900' : 'bg-brand-yellow text-brand-brown')">
+                <span x-text="toast.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Catch Laravel Session Flashes -->
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: '{{ session("success") }}' } })), 100);
+            });
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: '{{ session("error") }}' } })), 100);
+            });
+        </script>
+    @endif
+
 </body>
 </html>

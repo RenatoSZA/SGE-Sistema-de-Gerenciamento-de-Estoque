@@ -3,7 +3,7 @@
 @section('title', 'Suporte')
 
 @section('content')
-<div class="flex-1 flex flex-col md:flex-row gap-6 h-full overflow-hidden">
+<div class="flex-1 flex flex-col md:flex-row gap-6 h-auto md:h-full overflow-y-auto md:overflow-hidden custom-scrollbar">
     
     <!-- COLUNA ESQUERDA: Abrir Chamado -->
     <section class="flex-1 bg-brand-brown rounded-3xl p-6 shadow-xl flex flex-col overflow-y-auto custom-scrollbar h-full relative">

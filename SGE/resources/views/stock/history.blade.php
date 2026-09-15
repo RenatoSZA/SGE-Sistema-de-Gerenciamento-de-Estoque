@@ -48,7 +48,10 @@
                     <div class="w-[10%] text-right {{ $textClass }} font-black text-lg pr-4">{{ $sign }}{{ $mov->quantity_changed }}</div>
                 </div>
             @empty
-                <div class="text-white/50 text-center py-6">Nenhuma movimentação registrada.</div>
+                <div class="flex flex-col items-center justify-center opacity-50 m-auto mt-10">
+                    <svg class="w-16 h-16 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-white text-center text-lg font-bold">Nenhuma movimentação registrada.</p>
+                </div>
             @endforelse
 
         </div>
