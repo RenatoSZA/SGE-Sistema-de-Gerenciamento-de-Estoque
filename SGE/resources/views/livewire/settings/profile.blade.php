@@ -120,8 +120,4 @@ new #[Layout('layouts.sge')] class extends Component {
         </div>
     </form>
 
-    <div class="mt-12 pt-8 border-t border-white/10">
-        <livewire:settings.delete-user-form />
-    </div>
-
 </section>
