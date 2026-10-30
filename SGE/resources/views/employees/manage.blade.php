@@ -116,10 +116,15 @@
         @endif
 
         <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-white/10">
-            <div>
+            <div class="flex flex-wrap gap-2">
                 @if(isset($employee) && auth()->id() !== $employee->id)
                     <button type="submit" form="delete-employee-form" class="px-4 py-2 rounded-full font-bold bg-red-500/20 text-red-300 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 border border-red-500/40 transition-colors text-xs">
                         Excluir Permanentemente
+                    </button>
+                @endif
+                @if(isset($employee))
+                    <button type="submit" form="reset-password-form" class="px-4 py-2 rounded-full font-bold bg-brand-yellow/20 text-brand-yellow hover:bg-brand-yellow hover:text-brand-brown focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow border border-brand-yellow/40 transition-colors text-xs">
+                        Resetar Senha (Mudar@123)
                     </button>
                 @endif
             </div>
@@ -136,6 +141,12 @@
         <form id="delete-employee-form" action="{{ route('employees.destroy', $employee) }}" method="POST" class="hidden" onsubmit="return confirm('Tem certeza que deseja excluir definitivamente este funcionário?');">
             @csrf
             @method('DELETE')
+        </form>
+    @endif
+
+    @if(isset($employee))
+        <form id="reset-password-form" action="{{ route('employees.resetPassword', $employee) }}" method="POST" class="hidden" onsubmit="return confirm('Redefinir a senha deste funcionário para Mudar@123?');">
+            @csrf
         </form>
     @endif
 
