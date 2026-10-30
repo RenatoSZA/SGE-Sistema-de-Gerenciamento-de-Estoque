@@ -44,4 +44,11 @@ class SupportController extends Controller
 
         return redirect()->route('support.index')->with('success', 'Chamado registrado com sucesso! Nossa equipe técnica responderá em breve.');
     }
+
+    public function resolve(SupportTicket $ticket)
+    {
+        $ticket->update(['status' => 'resolvido']);
+
+        return redirect()->route('support.index')->with('success', 'Chamado marcado como resolvido!');
+    }
 }

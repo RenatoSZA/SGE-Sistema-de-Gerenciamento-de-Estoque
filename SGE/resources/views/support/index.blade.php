@@ -106,8 +106,22 @@
                                 <span class="font-bold text-brand-yellow">[{{ strtoupper($ticket->subject) }}]</span>
                                 <span class="opacity-90">{{ $ticket->description }}</span>
                                 <span class="text-white/60 ml-1">({{ $ticket->user->name ?? 'Usuário' }})</span>
+                                @if($ticket->attachment_path)
+                                    <a href="{{ asset('storage/' . $ticket->attachment_path) }}" target="_blank" class="text-brand-yellow underline ml-2 font-bold">Ver anexo</a>
+                                @endif
                             </div>
-                            <span class="px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 font-bold shrink-0">{{ ucfirst($ticket->status) }}</span>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span class="px-2 py-0.5 rounded-full {{ $ticket->status === 'resolvido' ? 'bg-blue-500/20 text-blue-200' : 'bg-green-500/20 text-green-300' }} font-bold">{{ ucfirst($ticket->status) }}</span>
+                                @if($ticket->status !== 'resolvido' && (auth()->user()->nivel_acesso === 'Admin' || auth()->user()->nivel_acesso === 'Gerente'))
+                                    <form action="{{ route('support.resolve', $ticket) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="px-2 py-0.5 rounded bg-brand-yellow text-brand-brown font-bold hover:bg-white transition-colors" title="Marcar como resolvido">
+                                            Concluir
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>

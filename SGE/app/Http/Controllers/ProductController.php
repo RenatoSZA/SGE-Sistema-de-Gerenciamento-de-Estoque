@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alert;
 use App\Models\Product;
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
@@ -128,6 +129,14 @@ class ProductController extends Controller
                 'quantity_changed' => $quantity,
                 'notes' => $notes,
             ]);
+
+            if ($type === 'out' && $lockedProduct->quantity <= $lockedProduct->min_quantity) {
+                $alertMessage = "Produto {$lockedProduct->name} está com estoque baixo ({$lockedProduct->quantity} un).";
+                Alert::firstOrCreate(
+                    ['message' => $alertMessage],
+                    ['type' => 'warning']
+                );
+            }
         });
 
         if ($insufficient) {

@@ -9,10 +9,13 @@
         <h2 id="heading-historico-estoque" class="text-white text-xl md:text-2xl font-black tracking-wide">HISTÓRICO GERAL DO ESTOQUE</h2>
         
         <div class="flex gap-3 w-full md:w-auto">
-            <!-- Filtro Tipo -->
-            <form action="{{ route('stock.history') }}" method="GET" class="flex items-center gap-2">
+            <!-- Filtro Busca e Tipo -->
+            <form action="{{ route('stock.history') }}" method="GET" class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                <label for="history-search" class="sr-only">Buscar por produto, responsável ou observação</label>
+                <input id="history-search" type="search" name="search" value="{{ request('search') }}" placeholder="Produto, responsável ou nota..." class="bg-white/10 border-2 border-transparent focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-full px-4 py-2 outline-none placeholder:text-white/70 text-sm">
+
                 <label for="history-type-filter" class="sr-only">Filtrar movimentações por tipo</label>
-                <select id="history-type-filter" name="type" class="bg-white/10 border-2 border-transparent focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-full px-4 py-2 outline-none cursor-pointer">
+                <select id="history-type-filter" name="type" class="bg-white/10 border-2 border-transparent focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-full px-4 py-2 outline-none cursor-pointer text-sm">
                     <option value="" class="text-black" {{ request('type') === null ? 'selected' : '' }}>Todas as Movimentações</option>
                     <option value="in" class="text-black" {{ request('type') === 'in' ? 'selected' : '' }}>Apenas Entradas</option>
                     <option value="out" class="text-black" {{ request('type') === 'out' ? 'selected' : '' }}>Apenas Saídas</option>
