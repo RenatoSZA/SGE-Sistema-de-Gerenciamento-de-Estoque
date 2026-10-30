@@ -3,12 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [\App\Http\Controllers\SiteController::class, 'index'])->name('site.index');
+Route::post('/login', [\App\Http\Controllers\SiteController::class, 'login'])->name('site.login');
 
 Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
@@ -16,17 +15,14 @@ Route::middleware(['auth'])->group(function () {
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
-
-Route::get('/', [\App\Http\Controllers\SiteController::class, 'index'])->name('site.index');
-Route::post('/login', [\App\Http\Controllers\SiteController::class, 'login'])->name('site.login');
-Route::post('/logout-custom', [\App\Http\Controllers\SiteController::class, 'logout'])->name('site.logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::middleware([\App\Http\Middleware\CheckAdminOrManager::class])->group(function () {
         Route::resource('employees', \App\Http\Controllers\EmployeeController::class)->except(['show']);
         Route::resource('products', \App\Http\Controllers\ProductController::class)->except(['index', 'show']);
+        Route::post('/alerts', [\App\Http\Controllers\AlertController::class, 'store'])->name('alerts.store');
+        Route::delete('/alerts/{alert}', [\App\Http\Controllers\AlertController::class, 'destroy'])->name('alerts.destroy');
     });
 
     Route::get('products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
@@ -35,12 +31,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/historico', [\App\Http\Controllers\StockMovementController::class, 'index'])->name('stock.history');
     Route::get('/suporte', [\App\Http\Controllers\SupportController::class, 'index'])->name('support.index');
     Route::post('/suporte', [\App\Http\Controllers\SupportController::class, 'store'])->name('support.store');
-    
-    Route::post('/alerts', [\App\Http\Controllers\AlertController::class, 'store'])->name('alerts.store');
-    Route::delete('/alerts/{alert}', [\App\Http\Controllers\AlertController::class, 'destroy'])->name('alerts.destroy');
 });
-
-
-
 
 require __DIR__.'/auth.php';

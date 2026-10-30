@@ -64,7 +64,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
 
         Session::flash('status', __($status));
 
-        $this->redirectRoute('login', navigate: true);
+        $this->redirectRoute('site.index', navigate: true);
     }
 }; ?>
 
