@@ -19,10 +19,18 @@ class CheckAdminOrManager
             return redirect('/')->with('error', 'Você precisa estar logado para acessar esta página.');
         }
 
+        if (!auth()->user()->is_active) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/')->withErrors(['matricula' => 'Sua conta foi desativada.']);
+        }
+
         $nivelAcesso = auth()->user()->nivel_acesso;
 
         if ($nivelAcesso !== 'Admin' && $nivelAcesso !== 'Gerente') {
-            return redirect('/dashboard')->with('error', 'Acesso negado. Apenas administradores e gerentes podem acessar o cadastro de funcionários.');
+            return redirect('/dashboard')->with('error', 'Acesso negado. Apenas administradores e gerentes podem realizar esta operação.');
         }
 
         return $next($request);
