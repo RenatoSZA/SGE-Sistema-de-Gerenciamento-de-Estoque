@@ -27,13 +27,6 @@
         </div>
     </div>
     
-    <!-- Alertas -->
-    @if(session('success'))
-        <div role="status" aria-live="polite" class="bg-green-500/20 border border-green-400 text-green-300 p-3 rounded-lg mb-4 text-sm font-bold">
-            {{ session('success') }}
-        </div>
-    @endif
-    
     <!-- Tabela de Produtos -->
     <div role="table" aria-label="Tabela de produtos em estoque" class="flex-1 overflow-hidden flex flex-col">
         <!-- Cabeçalho Tabela (Alinhado com as células de dados) -->

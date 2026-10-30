@@ -41,14 +41,7 @@
             
             @forelse($employees as $emp)
                 @php
-                    // Gerar iniciais
-                    $words = explode(' ', $emp->name);
-                    $initials = '';
-                    if (count($words) >= 2) {
-                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[count($words)-1], 0, 1));
-                    } else {
-                        $initials = strtoupper(substr($words[0], 0, 2));
-                    }
+                    $initials = strtoupper($emp->initials());
                     
                     $statusColor = $emp->is_active ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500 border-2 border-white/80';
                     $textColor = $emp->is_active ? 'text-white' : 'text-white/75';

@@ -26,12 +26,6 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div role="status" aria-live="polite" class="bg-green-500/20 border border-green-400 text-green-300 p-3 rounded-lg mb-4 text-sm font-bold">
-                {{ session('success') }}
-            </div>
-        @endif
-
         @if ($errors->any())
             <div role="alert" class="bg-red-500/20 border border-red-400 text-red-300 p-3 rounded-lg mb-4 text-sm font-bold">
                 <ul class="list-disc pl-5">

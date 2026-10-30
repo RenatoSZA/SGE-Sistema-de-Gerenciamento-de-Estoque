@@ -6,7 +6,6 @@ use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.guest')] class extends Component {
     public string $email = '';
-    public string $matricula = ''; // O protótipo pedia matrícula também, mas o breeze reseta só por email. Deixo aqui para não quebrar.
 
     /**
      * Send a password reset link to the provided email address.
