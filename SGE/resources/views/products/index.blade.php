@@ -90,8 +90,8 @@
                             </a>
                         @endif
                         
-                        <!-- Ajustar Estoque (Modal/Opção) - Pode ser acessível por Padrão e Gerente/Admin -->
-                        <button type="button" x-data x-on:click="$dispatch('open-stock-modal', {{ $product->id }})" aria-label="Ajustar estoque de {{ $product->name }}" class="p-1.5 bg-white/10 text-white rounded hover:bg-brand-yellow hover:text-brand-brown focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow transition-colors shadow-sm" title="Ajustar estoque de {{ $product->name }}">
+                        <!-- Ajustar Estoque (Modal) -->
+                        <button type="button" x-data x-on:click="$dispatch('open-stock-modal', { id: {{ $product->id }}, name: @js($product->name), current: {{ $product->quantity }} })" aria-label="Ajustar estoque de {{ $product->name }}" class="p-1.5 bg-white/10 text-white rounded hover:bg-brand-yellow hover:text-brand-brown focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow transition-colors shadow-sm" title="Ajustar estoque de {{ $product->name }}">
                             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
                         </button>
                     </div>
@@ -113,4 +113,92 @@
     </div>
 
 </section>
+
+<!-- Modal de Ajuste Rápido de Estoque -->
+<div x-data="{
+        open: false,
+        productId: null,
+        productName: '',
+        currentStock: 0,
+        type: 'in',
+        quantity: 1,
+        init() {
+            window.addEventListener('open-stock-modal', (e) => {
+                const data = e.detail;
+                if (typeof data === 'object' && data !== null) {
+                    this.productId = data.id;
+                    this.productName = data.name;
+                    this.currentStock = data.current;
+                } else {
+                    this.productId = data;
+                    this.productName = '';
+                    this.currentStock = 0;
+                }
+                this.type = 'in';
+                this.quantity = 1;
+                this.open = true;
+            });
+        }
+     }"
+     x-show="open"
+     x-on:keydown.escape.window="open = false"
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+     style="display: none;"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="stock-modal-title">
+    
+    <div x-show="open"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         @click.away="open = false"
+         class="bg-brand-brown border border-white/20 rounded-3xl p-6 w-full max-w-md shadow-2xl">
+        
+        <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+            <h3 id="stock-modal-title" class="text-white text-lg font-black tracking-wide uppercase">
+                Ajustar Estoque
+            </h3>
+            <button type="button" @click="open = false" aria-label="Fechar" class="text-white/60 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <p class="text-white/80 text-sm mb-4">
+            Produto: <strong class="text-brand-yellow" x-text="productName ? productName : ('#' + productId)"></strong>
+            <span class="block text-xs text-white/60 mt-1">
+                Saldo atual em estoque: <span class="font-bold text-white" x-text="currentStock"></span> un.
+            </span>
+        </p>
+
+        <form :action="'{{ url('products') }}/' + productId + '/adjust-stock'" method="POST" class="flex flex-col gap-4">
+            @csrf
+            <div>
+                <label class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Tipo de Movimentação</label>
+                <select name="type" x-model="type" class="w-full bg-brand-brown border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-3 py-2 outline-none text-sm font-bold cursor-pointer">
+                    <option value="in">Entrada (+ Adicionar)</option>
+                    <option value="out">Saída (- Remover)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Quantidade</label>
+                <input type="number" name="quantity" x-model="quantity" required min="1" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-3 py-2 outline-none text-sm font-bold">
+            </div>
+
+            <div class="flex justify-end gap-3 mt-4 pt-3 border-t border-white/10">
+                <button type="button" @click="open = false" class="px-5 py-2 rounded-full font-bold text-white hover:bg-white/10 transition-colors text-sm">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-6 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white shadow transition-colors text-sm">
+                    Confirmar Ajuste
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
 @endsection
