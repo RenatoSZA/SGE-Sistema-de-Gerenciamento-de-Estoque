@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Script de automação para configuração e execução do SGE em PC Windows virgem.
+    Script de automação para configuração e execução do SGE no Windows.
 .DESCRIPTION
     Instala dependências necessárias (Git, PHP, Composer, Node.js, MySQL) via Winget,
     configura o ambiente, instala dependências do Laravel e do Vite,
@@ -23,7 +23,7 @@ $Host.UI.RawUI.WindowTitle = "Instalador Automatizado SGE"
 Clear-Host
 
 Write-Host "======================================================" -ForegroundColor Cyan
-Write-Host "      SGE - INSTALADOR AUTOMATIZADO (PC VIRGEM)       " -ForegroundColor Cyan
+Write-Host "         SGE - INSTALADOR AUTOMATIZADO        " -ForegroundColor Cyan
 Write-Host "======================================================" -ForegroundColor Cyan
 Write-Host ""
 

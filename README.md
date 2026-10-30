@@ -22,9 +22,9 @@ O Sistema de Gerenciamento de Estoque foi desenvolvido para auxiliar empresas no
 
 ---
 
-## ⚡ Como Executar em um PC "Virgem" (Windows - 1 Clique)
+## ⚡ Como Instalar por Script
 
-O projeto possui automação completa via scripts para preparar todo o ambiente em computadores Windows 10/11 sem ferramentas de desenvolvimento pré-instaladas.
+O projeto possui automação completa via scripts para preparar todo o ambiente em computadores Windows sem ferramentas de desenvolvimento pré-instaladas.
 
 ### Arquivos de Automação
 

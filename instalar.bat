@@ -1,5 +1,5 @@
 @echo off
-title Instalador SGE - PC Virgem
+title Instalador SGE - Script Automatizado
 echo ======================================================
 echo    Iniciando Instalador Automatizado do SGE...
 echo ======================================================
