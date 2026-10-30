@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt as LivewireVolt;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -13,33 +12,51 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered(): void
     {
-        $response = $this->get('/login');
+        $response = $this->get('/');
 
         $response->assertStatus(200);
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    public function test_users_can_authenticate_using_matricula(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'matricula' => 'F20260001',
+            'is_active' => true,
+        ]);
 
-        $response = LivewireVolt::test('auth.login')
-            ->set('email', $user->email)
-            ->set('password', 'password')
-            ->call('login');
+        $response = $this->post('/login', [
+            'matricula' => 'F20260001',
+            'password' => 'password',
+        ]);
 
-        $response
-            ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect('/dashboard');
+        $this->assertAuthenticatedAs($user);
+    }
 
-        $this->assertAuthenticated();
+    public function test_inactive_users_can_not_authenticate(): void
+    {
+        User::factory()->create([
+            'matricula' => 'F20260002',
+            'is_active' => false,
+        ]);
+
+        $response = $this->post('/login', [
+            'matricula' => 'F20260002',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors('matricula');
+        $this->assertGuest();
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'matricula' => 'F20260003',
+        ]);
 
         $this->post('/login', [
-            'email' => $user->email,
+            'matricula' => $user->matricula,
             'password' => 'wrong-password',
         ]);
 

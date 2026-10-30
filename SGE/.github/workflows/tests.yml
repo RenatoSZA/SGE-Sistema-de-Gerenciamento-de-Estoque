@@ -10,10 +10,13 @@ on:
       - develop
       - main
 
+defaults:
+  run:
+    working-directory: SGE
+
 jobs:
   ci:
     runs-on: ubuntu-latest
-    environment: Testing
 
     steps:
       - name: Checkout
@@ -24,13 +27,14 @@ jobs:
         with:
           php-version: 8.4
           tools: composer:v2
-          coverage: xdebug
+          coverage: none
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: 'SGE/package-lock.json'
 
       - name: Install Node Dependencies
         run: npm i
