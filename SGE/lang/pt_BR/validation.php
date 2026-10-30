@@ -1,0 +1,46 @@
+<?php
+
+return [
+    'required' => 'O campo :attribute é obrigatório.',
+    'string' => 'O campo :attribute deve ser um texto.',
+    'email' => 'O campo :attribute deve ser um endereço de e-mail válido.',
+    'unique' => 'Este :attribute já está cadastrado no sistema.',
+    'min' => [
+        'numeric' => 'O campo :attribute deve ser no mínimo :min.',
+        'string' => 'O campo :attribute deve ter no mínimo :min caracteres.',
+    ],
+    'max' => [
+        'numeric' => 'O campo :attribute não pode ser maior que :max.',
+        'string' => 'O campo :attribute não pode ter mais de :max caracteres.',
+        'file' => 'O arquivo em :attribute não pode ser maior que :max KB.',
+    ],
+    'size' => [
+        'string' => 'O campo :attribute deve conter exatamente :size caracteres.',
+    ],
+    'in' => 'O valor selecionado para :attribute é inválido.',
+    'integer' => 'O campo :attribute deve ser um número inteiro.',
+    'confirmed' => 'A confirmação de :attribute não confere.',
+    'current_password' => 'A senha atual informada está incorreta.',
+    'date_format' => 'O campo :attribute deve estar no formato :format.',
+    'mimes' => 'O arquivo em :attribute deve ser do tipo: :values.',
+    'attributes' => [
+        'name' => 'nome',
+        'email' => 'e-mail',
+        'password' => 'senha',
+        'current_password' => 'senha atual',
+        'cpf' => 'CPF',
+        'matricula' => 'matrícula',
+        'departamento' => 'departamento',
+        'nivel_acesso' => 'nível de acesso',
+        'horario_entrada' => 'horário de entrada',
+        'horario_saida' => 'horário de saída',
+        'brand' => 'marca',
+        'sector' => 'categoria',
+        'quantity' => 'quantidade',
+        'min_quantity' => 'estoque mínimo',
+        'subject' => 'assunto',
+        'description' => 'descrição',
+        'attachment' => 'anexo',
+        'message' => 'mensagem',
+    ],
+];
