@@ -13,7 +13,7 @@
             <p class="text-white/80 text-sm mt-1">Abra um chamado direto com nossa equipe de suporte técnico.</p>
         </div>
 
-        <form class="flex flex-col gap-5 flex-1" action="#" method="POST" enctype="multipart/form-data">
+        <form class="flex flex-col gap-5 flex-1" action="{{ route('support.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div>
