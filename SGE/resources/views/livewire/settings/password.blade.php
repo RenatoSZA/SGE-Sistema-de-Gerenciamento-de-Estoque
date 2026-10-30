@@ -38,41 +38,41 @@ new #[Layout('layouts.sge')] class extends Component {
     }
 }; ?>
 
-<section class="flex-1 bg-brand-brown rounded-3xl p-6 shadow-xl flex flex-col overflow-y-auto custom-scrollbar h-full relative">
+<section aria-labelledby="heading-atualizar-senha" class="flex-1 bg-brand-brown rounded-3xl p-6 shadow-xl flex flex-col overflow-y-auto custom-scrollbar h-full relative">
     
     <div class="mb-6 border-b border-white/10 pb-4">
-        <h2 class="text-white text-xl md:text-2xl font-black tracking-wide uppercase">
+        <h2 id="heading-atualizar-senha" class="text-white text-xl md:text-2xl font-black tracking-wide uppercase">
             {{ __('ATUALIZAR SENHA') }}
         </h2>
-        <p class="text-white/60 text-sm font-medium mt-1">Garanta que sua conta esteja usando uma senha longa e segura.</p>
+        <p class="text-white/80 text-sm font-medium mt-1">Garanta que sua conta esteja usando uma senha longa e segura.</p>
     </div>
 
     <form wire:submit="updatePassword" class="flex flex-col gap-5 flex-1 max-w-3xl">
         
         <div>
-            <label class="block text-white/70 text-xs font-bold mb-1 uppercase tracking-wider">{{ __('Senha Atual') }}</label>
-            <input wire:model="current_password" type="password" required autocomplete="current-password" class="w-full bg-white/5 border border-white/10 focus:border-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
-            @error('current_password') <span class="text-red-400 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+            <label for="current_password" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">{{ __('Senha Atual') }}</label>
+            <input id="current_password" wire:model="current_password" type="password" required autocomplete="current-password" aria-invalid="{{ $errors->has('current_password') ? 'true' : 'false' }}" aria-describedby="{{ $errors->has('current_password') ? 'current-password-error' : '' }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+            @error('current_password') <span id="current-password-error" role="alert" class="text-red-300 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div>
-            <label class="block text-white/70 text-xs font-bold mb-1 uppercase tracking-wider">{{ __('Nova Senha') }}</label>
-            <input wire:model="password" type="password" required autocomplete="new-password" class="w-full bg-white/5 border border-white/10 focus:border-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
-            @error('password') <span class="text-red-400 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+            <label for="new_password" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">{{ __('Nova Senha') }}</label>
+            <input id="new_password" wire:model="password" type="password" required autocomplete="new-password" aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}" aria-describedby="{{ $errors->has('password') ? 'new-password-error' : '' }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+            @error('password') <span id="new-password-error" role="alert" class="text-red-300 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div>
-            <label class="block text-white/70 text-xs font-bold mb-1 uppercase tracking-wider">{{ __('Confirmar Nova Senha') }}</label>
-            <input wire:model="password_confirmation" type="password" required autocomplete="new-password" class="w-full bg-white/5 border border-white/10 focus:border-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
-            @error('password_confirmation') <span class="text-red-400 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+            <label for="password_confirmation" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">{{ __('Confirmar Nova Senha') }}</label>
+            <input id="password_confirmation" wire:model="password_confirmation" type="password" required autocomplete="new-password" aria-invalid="{{ $errors->has('password_confirmation') ? 'true' : 'false' }}" aria-describedby="{{ $errors->has('password_confirmation') ? 'password-confirmation-error' : '' }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+            @error('password_confirmation') <span id="password-confirmation-error" role="alert" class="text-red-300 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
-            <button type="submit" class="px-8 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white shadow-md transition-colors">
+            <button type="submit" class="px-8 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-md transition-colors">
                 {{ __('Salvar Nova Senha') }}
             </button>
 
-            <x-action-message class="me-3 text-green-400 font-bold text-sm" on="password-updated">
+            <x-action-message class="me-3 text-green-300 font-bold text-sm" on="password-updated">
                 {{ __('Senha atualizada com sucesso.') }}
             </x-action-message>
         </div>
