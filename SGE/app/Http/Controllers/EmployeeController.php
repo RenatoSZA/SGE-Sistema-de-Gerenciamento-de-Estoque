@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
@@ -15,12 +16,14 @@ class EmployeeController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%")
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
                   ->orWhere('matricula', 'like', "%{$search}%")
                   ->orWhere('cpf', 'like', "%{$search}%");
+            });
         }
 
-        $employees = $query->orderBy('name')->paginate(15);
+        $employees = $query->orderBy('name')->paginate(15)->withQueryString();
 
         return view('employees.index', compact('employees'));
     }
@@ -33,15 +36,18 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $request->merge([
-            'cpf' => preg_replace('/[^0-9]/', '', $request->cpf ?? '')
+            'cpf' => preg_replace('/[^0-9]/', '', $request->cpf ?? ''),
+            'name' => $request->input('name', $request->input('nome')),
         ]);
 
         $validated = $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users'],
             'cpf' => ['required', 'string', 'size:11', 'unique:users', new \App\Rules\CpfValidationRule()],
             'nivel_acesso' => ['required', 'in:Funcionario,Gerente,Admin'],
             'departamento' => ['required', 'string', 'max:255'],
+            'horario_entrada' => ['nullable', 'date_format:H:i'],
+            'horario_saida' => ['nullable', 'date_format:H:i'],
         ]);
 
         if (auth()->user()->nivel_acesso === 'Gerente' && $validated['nivel_acesso'] === 'Admin') {
@@ -57,31 +63,36 @@ class EmployeeController extends Controller
             $prefix = 'A';
         }
 
-        // Generate matricula
-        // Get the latest user hired this year with the same prefix to increment the number
-        $latestUser = User::where('matricula', 'like', $prefix . $year . '%')
-            ->orderBy('matricula', 'desc')
-            ->first();
+        $matricula = DB::transaction(function () use ($validated, $prefix, $year) {
+            $latestUser = User::where('matricula', 'like', $prefix . $year . '%')
+                ->lockForUpdate()
+                ->orderBy('matricula', 'desc')
+                ->first();
 
-        $sequence = 1;
-        if ($latestUser) {
-            $latestSequence = (int) substr($latestUser->matricula, -4);
-            $sequence = $latestSequence + 1;
-        }
+            $sequence = 1;
+            if ($latestUser) {
+                $latestSequence = (int) substr($latestUser->matricula, -4);
+                $sequence = $latestSequence + 1;
+            }
 
-        $matricula = $prefix . $year . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+            $generatedMatricula = $prefix . $year . str_pad($sequence, 4, '0', STR_PAD_LEFT);
 
-        $user = User::create([
-            'name' => $validated['nome'],
-            'email' => $validated['email'],
-            'cpf' => $validated['cpf'],
-            'nivel_acesso' => $validated['nivel_acesso'],
-            'departamento' => $validated['departamento'],
-            'matricula' => $matricula,
-            'password' => Hash::make('Mudar@123'),
-            'data_admissao' => Carbon::now()->toDateString(),
-            'is_active' => true,
-        ]);
+            User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'cpf' => $validated['cpf'],
+                'nivel_acesso' => $validated['nivel_acesso'],
+                'departamento' => $validated['departamento'],
+                'horario_entrada' => $validated['horario_entrada'] ?? '07:00',
+                'horario_saida' => $validated['horario_saida'] ?? '17:00',
+                'matricula' => $generatedMatricula,
+                'password' => Hash::make('Mudar@123'),
+                'data_admissao' => Carbon::now()->toDateString(),
+                'is_active' => true,
+            ]);
+
+            return $generatedMatricula;
+        });
 
         return redirect()->route('employees.index')->with('success', 'Funcionário cadastrado com sucesso! Matrícula: ' . $matricula);
     }
@@ -99,10 +110,12 @@ class EmployeeController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users,email,' . $employee->id],
+            'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users,email,' . $employee->id],
             'cpf' => ['required', 'string', 'size:11', 'unique:users,cpf,' . $employee->id, new \App\Rules\CpfValidationRule()],
             'nivel_acesso' => ['required', 'in:Funcionario,Gerente,Admin'],
             'departamento' => ['required', 'string', 'max:255'],
+            'horario_entrada' => ['nullable', 'date_format:H:i'],
+            'horario_saida' => ['nullable', 'date_format:H:i'],
             'is_active' => ['boolean'],
         ]);
 
@@ -116,6 +129,8 @@ class EmployeeController extends Controller
             'cpf' => $validated['cpf'],
             'nivel_acesso' => $validated['nivel_acesso'],
             'departamento' => $validated['departamento'],
+            'horario_entrada' => $validated['horario_entrada'] ?? $employee->horario_entrada ?? '07:00',
+            'horario_saida' => $validated['horario_saida'] ?? $employee->horario_saida ?? '17:00',
             'is_active' => $request->has('is_active'),
         ]);
 

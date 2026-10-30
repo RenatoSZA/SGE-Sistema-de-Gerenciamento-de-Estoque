@@ -33,11 +33,11 @@ class DashboardSeeder extends Seeder
 
         // 3. Create a few users with schedules if they don't exist
         $usersToCreate = [
-            ['name' => 'João Silva', 'matricula' => 'F20260002', 'horario_entrada' => '08:00', 'horario_saida' => '18:00', 'is_active' => true],
-            ['name' => 'Maria Souza', 'matricula' => 'F20260003', 'horario_entrada' => '09:00', 'horario_saida' => '18:00', 'is_active' => false],
-            ['name' => 'Carlos Gomes', 'matricula' => 'G20260001', 'horario_entrada' => '07:30', 'horario_saida' => '17:30', 'is_active' => true],
-            ['name' => 'Ana Dias', 'matricula' => 'F20260004', 'horario_entrada' => '10:00', 'horario_saida' => '19:00', 'is_active' => true],
-            ['name' => 'Lucas Paz', 'matricula' => 'F20260005', 'horario_entrada' => '06:00', 'horario_saida' => '15:00', 'is_active' => false],
+            ['name' => 'João Silva', 'matricula' => 'F20260002', 'cpf' => '33325290889', 'horario_entrada' => '08:00', 'horario_saida' => '18:00', 'is_active' => true],
+            ['name' => 'Maria Souza', 'matricula' => 'F20260003', 'cpf' => '43921056009', 'horario_entrada' => '09:00', 'horario_saida' => '18:00', 'is_active' => false],
+            ['name' => 'Carlos Gomes', 'matricula' => 'G20260001', 'cpf' => '23869367488', 'horario_entrada' => '07:30', 'horario_saida' => '17:30', 'is_active' => true],
+            ['name' => 'Ana Dias', 'matricula' => 'F20260004', 'cpf' => '52998224725', 'horario_entrada' => '10:00', 'horario_saida' => '19:00', 'is_active' => true],
+            ['name' => 'Lucas Paz', 'matricula' => 'F20260005', 'cpf' => '17859614084', 'horario_entrada' => '06:00', 'horario_saida' => '15:00', 'is_active' => false],
         ];
 
         foreach ($usersToCreate as $u) {
@@ -46,7 +46,7 @@ class DashboardSeeder extends Seeder
                 [
                     'name' => $u['name'],
                     'email' => strtolower(explode(' ', $u['name'])[0]) . '@sge.com',
-                    'cpf' => mt_rand(10000000000, 99999999999),
+                    'cpf' => $u['cpf'],
                     'departamento' => 'Operacoes',
                     'nivel_acesso' => str_starts_with($u['matricula'], 'G') ? 'Gerente' : 'Funcionario',
                     'password' => Hash::make('password'),

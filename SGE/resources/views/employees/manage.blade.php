@@ -50,7 +50,7 @@
         <div class="flex flex-col md:flex-row gap-5">
             <div class="flex-[2]">
                 <label for="emp-name" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Nome Completo</label>
-                <input id="emp-name" type="text" name="{{ isset($employee) ? 'name' : 'nome' }}" value="{{ old(isset($employee) ? 'name' : 'nome', $employee->name ?? '') }}" required autocomplete="name" aria-invalid="{{ $errors->has('name') || $errors->has('nome') ? 'true' : 'false' }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+                <input id="emp-name" type="text" name="name" value="{{ old('name', $employee->name ?? '') }}" required autocomplete="name" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
             </div>
             <div class="flex-1">
                 <label for="emp-cpf" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">CPF</label>
@@ -96,6 +96,18 @@
             </div>
         </div>
         
+        <!-- Linha 4: Horários de Entrada e Saída -->
+        <div class="flex flex-col md:flex-row gap-5">
+            <div class="flex-1">
+                <label for="emp-horario-entrada" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Horário de Entrada</label>
+                <input id="emp-horario-entrada" type="time" name="horario_entrada" value="{{ old('horario_entrada', isset($employee->horario_entrada) ? substr($employee->horario_entrada, 0, 5) : '07:00') }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+            </div>
+            <div class="flex-1">
+                <label for="emp-horario-saida" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Horário de Saída</label>
+                <input id="emp-horario-saida" type="time" name="horario_saida" value="{{ old('horario_saida', isset($employee->horario_saida) ? substr($employee->horario_saida, 0, 5) : '17:00') }}" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+            </div>
+        </div>
+
         @if(isset($employee))
             <!-- Linha 4: Status -->
             <div class="flex items-center gap-2 mt-2">
