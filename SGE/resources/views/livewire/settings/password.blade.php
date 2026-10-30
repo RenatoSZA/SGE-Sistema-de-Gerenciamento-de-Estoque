@@ -40,9 +40,19 @@ new #[Layout('layouts.sge')] class extends Component {
 
 <section aria-labelledby="heading-atualizar-senha" class="flex-1 bg-brand-brown rounded-3xl p-6 shadow-xl flex flex-col overflow-y-auto custom-scrollbar h-full relative">
     
-    <div class="mb-6 border-b border-white/10 pb-4">
+    <!-- Sub-navegação Perfil / Senha -->
+    <div class="flex gap-2 mb-6 border-b border-white/10 pb-4">
+        <a href="{{ route('settings.profile') }}" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors {{ request()->routeIs('settings.profile') ? 'bg-brand-yellow text-brand-brown shadow-sm' : 'bg-white/10 text-white hover:bg-white/20' }}">
+            Meu Perfil
+        </a>
+        <a href="{{ route('settings.password') }}" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors {{ request()->routeIs('settings.password') ? 'bg-brand-yellow text-brand-brown shadow-sm' : 'bg-white/10 text-white hover:bg-white/20' }}">
+            Alterar Senha
+        </a>
+    </div>
+
+    <div class="mb-6">
         <h2 id="heading-atualizar-senha" class="text-white text-xl md:text-2xl font-black tracking-wide uppercase">
-            {{ __('ATUALIZAR SENHA') }}
+            {{ __('SEGURANÇA DA CONTA') }}
         </h2>
         <p class="text-white/80 text-sm font-medium mt-1">Garanta que sua conta esteja usando uma senha longa e segura.</p>
     </div>
