@@ -95,6 +95,24 @@
             </div>
 
         </div>
+
+        @if(isset($tickets) && $tickets->count() > 0)
+            <div class="mt-6 pt-4 border-t border-white/10">
+                <h3 class="text-brand-yellow text-sm font-black uppercase tracking-wider mb-3">Chamados Recentes</h3>
+                <div class="flex flex-col gap-2 max-h-[180px] overflow-y-auto pr-1 custom-scrollbar">
+                    @foreach($tickets as $ticket)
+                        <div class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white flex justify-between items-center gap-2">
+                            <div class="truncate">
+                                <span class="font-bold text-brand-yellow">[{{ strtoupper($ticket->subject) }}]</span>
+                                <span class="opacity-90">{{ $ticket->description }}</span>
+                                <span class="text-white/60 ml-1">({{ $ticket->user->name ?? 'Usuário' }})</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 font-bold shrink-0">{{ ucfirst($ticket->status) }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </section>
     
 </div>
