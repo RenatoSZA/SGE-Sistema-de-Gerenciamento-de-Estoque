@@ -76,21 +76,31 @@
             @endif
 
             <!-- Ações Form Principal -->
-            <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-white/10">
-                <a href="{{ route('products.index') }}" class="px-6 py-2 rounded-full font-bold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow border border-transparent transition-colors">Cancelar</a>
-                <button type="submit" class="px-8 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-md transition-colors">
-                    {{ isset($product) ? 'Salvar Alterações' : 'Criar Produto' }}
-                </button>
+            <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-white/10">
+                <div>
+                    @if(isset($product) && (auth()->user()->nivel_acesso === 'Admin' || auth()->user()->nivel_acesso === 'Gerente'))
+                        <button type="submit" form="delete-product-form" class="px-4 py-2 rounded-full font-bold bg-red-500/20 text-red-300 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 border border-red-500/40 transition-colors text-xs">
+                            Excluir Produto
+                        </button>
+                    @endif
+                </div>
+                <div class="flex gap-3">
+                    <a href="{{ route('products.index') }}" class="px-6 py-2 rounded-full font-bold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow border border-transparent transition-colors">Cancelar</a>
+                    <button type="submit" class="px-8 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-md transition-colors">
+                        {{ isset($product) ? 'Salvar Alterações' : 'Criar Produto' }}
+                    </button>
+                </div>
             </div>
         </form>
 
         @if(isset($product))
-            <!-- Formulário Exclusão -->
-            <form action="{{ route('products.destroy', $product) }}" method="POST" class="absolute bottom-6 left-6" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="px-4 py-2 rounded-full font-bold bg-red-500/20 text-red-300 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 border border-red-500/40 transition-colors text-xs">Excluir Produto</button>
-            </form>
+            @if(auth()->user()->nivel_acesso === 'Admin' || auth()->user()->nivel_acesso === 'Gerente')
+                <!-- Formulário Exclusão Independente acionado via form="delete-product-form" -->
+                <form id="delete-product-form" action="{{ route('products.destroy', $product) }}" method="POST" class="hidden" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            @endif
             
             <!-- Linha 3: Ajuste de Estoque -->
             <form action="{{ route('products.adjustStock', $product) }}" method="POST" aria-labelledby="heading-ajuste-manual" class="bg-white/5 border border-white/10 rounded-xl p-4 mt-8">

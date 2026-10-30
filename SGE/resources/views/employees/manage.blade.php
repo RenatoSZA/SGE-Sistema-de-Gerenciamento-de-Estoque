@@ -109,19 +109,27 @@
             </div>
         @endif
 
-        <div class="flex justify-start gap-3 mt-4 pt-4 border-t border-white/10">
-            <a href="{{ route('employees.index') }}" class="px-6 py-2 rounded-full font-bold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow border border-transparent transition-colors">Cancelar</a>
-            <button type="submit" class="px-8 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-md transition-colors">
-                {{ isset($employee) ? 'Salvar Alterações' : 'Cadastrar Funcionário' }}
-            </button>
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-white/10">
+            <div>
+                @if(isset($employee) && auth()->id() !== $employee->id)
+                    <button type="submit" form="delete-employee-form" class="px-4 py-2 rounded-full font-bold bg-red-500/20 text-red-300 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 border border-red-500/40 transition-colors text-xs">
+                        Excluir Permanentemente
+                    </button>
+                @endif
+            </div>
+            <div class="flex gap-3">
+                <a href="{{ route('employees.index') }}" class="px-6 py-2 rounded-full font-bold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow border border-transparent transition-colors">Cancelar</a>
+                <button type="submit" class="px-8 py-2 rounded-full font-bold bg-brand-yellow text-brand-brown hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-md transition-colors">
+                    {{ isset($employee) ? 'Salvar Alterações' : 'Cadastrar Funcionário' }}
+                </button>
+            </div>
         </div>
     </form>
     
     @if(isset($employee) && auth()->id() !== $employee->id)
-        <form action="{{ route('employees.destroy', $employee) }}" method="POST" class="absolute bottom-6 right-6" onsubmit="return confirm('Tem certeza que deseja excluir definitivamente este funcionário?');">
+        <form id="delete-employee-form" action="{{ route('employees.destroy', $employee) }}" method="POST" class="hidden" onsubmit="return confirm('Tem certeza que deseja excluir definitivamente este funcionário?');">
             @csrf
             @method('DELETE')
-            <button type="submit" class="px-4 py-2 rounded-full font-bold bg-red-500/20 text-red-300 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 border border-red-500/40 transition-colors text-xs">Excluir Permanentemente</button>
         </form>
     @endif
 
