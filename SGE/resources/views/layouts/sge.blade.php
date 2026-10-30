@@ -107,14 +107,14 @@
     @if(session('success'))
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: '{{ session("success") }}' } })), 100);
+                setTimeout(() => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: @js(session('success')) } })), 100);
             });
         </script>
     @endif
     @if(session('error'))
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: '{{ session("error") }}' } })), 100);
+                setTimeout(() => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: @js(session('error')) } })), 100);
             });
         </script>
     @endif
