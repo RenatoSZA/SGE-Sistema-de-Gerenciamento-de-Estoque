@@ -19,11 +19,11 @@ if (-not $isAdmin) {
     exit
 }
 
-$Host.UI.RawUI.WindowTitle = "Instalador Automatizado SGE"
+$Host.UI.RawUI.WindowTitle = "Configuracao Automatizada SGE"
 Clear-Host
 
 Write-Host "======================================================" -ForegroundColor Cyan
-Write-Host "         SGE - INSTALADOR AUTOMATIZADO        " -ForegroundColor Cyan
+Write-Host "      SGE - CONFIGURACAO E EXECUCAO AUTOMATIZADA      " -ForegroundColor Cyan
 Write-Host "======================================================" -ForegroundColor Cyan
 Write-Host ""
 

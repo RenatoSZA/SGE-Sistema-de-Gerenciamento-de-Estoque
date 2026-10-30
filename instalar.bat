@@ -1,7 +1,7 @@
 @echo off
-title Instalador SGE - Script Automatizado
+title SGE - Configuracao Automatizada
 echo ======================================================
-echo    Iniciando Instalador Automatizado do SGE...
+echo    Iniciando Configuracao e Execucao do SGE...
 echo ======================================================
 echo.
 

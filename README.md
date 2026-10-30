@@ -22,19 +22,19 @@ O Sistema de Gerenciamento de Estoque foi desenvolvido para auxiliar empresas no
 
 ---
 
-## ⚡ Como Instalar por Script
+## ⚡ Como Executar via Script
 
-O projeto possui automação completa via scripts para preparar todo o ambiente em computadores Windows sem ferramentas de desenvolvimento pré-instaladas.
+O projeto possui automação completa via scripts para preparar todo o ambiente e iniciar a aplicação em computadores Windows sem ferramentas de desenvolvimento pré-instaladas.
 
 ### Arquivos de Automação
 
 | Arquivo | Finalidade |
 | :--- | :--- |
 | **`instalar.bat`** | Ponto de entrada de 1 clique. Bypassa restrições do PowerShell e solicita permissão de Administrador quando necessário. |
-| **`setup.ps1`** | Script PowerShell responsável por instalar dependências, compilar assets, configurar banco e iniciar o sistema. |
-| **`iniciar.bat`** | Inicializador rápido para o dia a dia após a primeira instalação (não reinstala nada, apenas sobe o servidor e abre o navegador). |
+| **`setup.ps1`** | Script PowerShell responsável por preparar dependências, compilar assets, configurar banco e iniciar o sistema. |
+| **`iniciar.bat`** | Inicializador rápido para o dia a dia após a primeira configuração (não reexecuta o setup, apenas sobe o servidor e abre o navegador). |
 
-### Passo a Passo para Primeira Instalação Automática
+### Passo a Passo para a Primeira Execução
 
 1. **Baixar ou clonar o projeto** para qualquer pasta da máquina.
 2. Dê **2 cliques no arquivo `instalar.bat`**.
