@@ -15,12 +15,14 @@ class ProductController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%")
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
                   ->orWhere('brand', 'like', "%{$search}%")
                   ->orWhere('sector', 'like', "%{$search}%");
+            });
         }
 
-        $products = $query->orderBy('name')->paginate(15);
+        $products = $query->orderBy('name')->paginate(15)->withQueryString();
 
         return view('products.index', compact('products'));
     }
@@ -37,23 +39,28 @@ class ProductController extends Controller
             'brand' => 'required|string|max:255',
             'sector' => 'required|string|max:255',
             'quantity' => 'nullable|integer|min:0',
+            'min_quantity' => 'nullable|integer|min:0',
         ]);
 
         $quantity = $validated['quantity'] ?? 0;
+        $minQuantity = $validated['min_quantity'] ?? 5;
         
-        DB::transaction(function () use ($validated, $quantity) {
+        DB::transaction(function () use ($validated, $quantity, $minQuantity) {
             $product = Product::create([
                 'name' => $validated['name'],
                 'brand' => $validated['brand'],
                 'sector' => $validated['sector'],
                 'quantity' => $quantity,
+                'min_quantity' => $minQuantity,
             ]);
 
             if ($quantity > 0) {
                 StockMovement::create([
                     'product_id' => $product->id,
+                    'user_id' => auth()->id(),
                     'type' => 'in',
                     'quantity_changed' => $quantity,
+                    'notes' => 'Estoque inicial no cadastro',
                 ]);
             }
         });
@@ -63,7 +70,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $movements = $product->stockMovements()->orderBy('created_at', 'desc')->take(20)->get();
+        $movements = $product->stockMovements()->with('user')->orderBy('created_at', 'desc')->take(20)->get();
         return view('products.manage', compact('product', 'movements'));
     }
 
@@ -73,6 +80,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'sector' => 'required|string|max:255',
+            'min_quantity' => 'required|integer|min:0',
         ]);
 
         $product->update($validated);
@@ -91,26 +99,41 @@ class ProductController extends Controller
         $validated = $request->validate([
             'type' => 'required|in:in,out',
             'quantity' => 'required|integer|min:1',
+            'notes' => 'nullable|string|max:255',
         ]);
 
         $quantity = $validated['quantity'];
         $type = $validated['type'];
+        $notes = $validated['notes'] ?? null;
 
-        if ($type === 'out' && $product->quantity < $quantity) {
-            return back()->withErrors(['quantity' => 'Estoque insuficiente para esta saída.']);
-        }
+        $insufficient = false;
 
-        DB::transaction(function () use ($product, $quantity, $type) {
-            $product->quantity = $type === 'in' ? $product->quantity + $quantity : $product->quantity - $quantity;
-            $product->save();
+        DB::transaction(function () use ($product, $quantity, $type, $notes, &$insufficient) {
+            $lockedProduct = Product::where('id', $product->id)->lockForUpdate()->firstOrFail();
+
+            if ($type === 'out' && $lockedProduct->quantity < $quantity) {
+                $insufficient = true;
+                return;
+            }
+
+            $lockedProduct->quantity = $type === 'in'
+                ? $lockedProduct->quantity + $quantity
+                : $lockedProduct->quantity - $quantity;
+            $lockedProduct->save();
 
             StockMovement::create([
-                'product_id' => $product->id,
+                'product_id' => $lockedProduct->id,
+                'user_id' => auth()->id(),
                 'type' => $type,
                 'quantity_changed' => $quantity,
+                'notes' => $notes,
             ]);
         });
 
-        return redirect()->route('products.edit', $product)->with('success', 'Estoque ajustado com sucesso!');
+        if ($insufficient) {
+            return back()->withErrors(['quantity' => 'Estoque insuficiente para esta saída.'])->with('error', 'Estoque insuficiente para esta saída.');
+        }
+
+        return back()->with('success', 'Estoque ajustado com sucesso!');
     }
 }

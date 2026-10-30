@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('brand');
             $table->string('sector');
             $table->integer('quantity')->default(0);
+            $table->integer('min_quantity')->default(5);
             $table->timestamps();
         });
     }

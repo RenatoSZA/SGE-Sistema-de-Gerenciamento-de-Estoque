@@ -28,10 +28,11 @@
     <div role="table" aria-label="Tabela de histórico geral do estoque" class="flex-1 overflow-hidden flex flex-col">
         <div role="rowgroup">
             <div role="row" class="bg-brand-yellow text-brand-brown rounded-t-xl px-4 py-3 flex text-xs md:text-sm font-black tracking-wider uppercase mb-1">
-                <div role="columnheader" class="w-[20%] pl-2">DATA/HORA</div>
-                <div role="columnheader" class="w-[15%] text-center">TIPO</div>
-                <div role="columnheader" class="w-[15%] text-center">PRODUTO ID</div>
-                <div role="columnheader" class="w-[40%]">PRODUTO NOME</div>
+                <div role="columnheader" class="w-[15%] pl-2">DATA/HORA</div>
+                <div role="columnheader" class="w-[12%] text-center">TIPO</div>
+                <div role="columnheader" class="w-[28%]">PRODUTO</div>
+                <div role="columnheader" class="w-[20%]">RESPONSÁVEL</div>
+                <div role="columnheader" class="w-[15%]">OBSERVAÇÃO</div>
                 <div role="columnheader" class="w-[10%] text-right pr-4">QTD</div>
             </div>
         </div>
@@ -48,12 +49,16 @@
                     $sign = $isIn ? '+' : '-';
                 @endphp
                 <div role="row" class="{{ $bgClass }} border-l-4 transition-colors rounded-r-lg px-4 py-3 flex items-center text-sm text-white font-medium">
-                    <div role="cell" class="w-[20%] pl-2 opacity-85">{{ $mov->created_at->format('d/m/Y H:i') }}</div>
-                    <div role="cell" class="w-[15%] text-center {{ $textClass }} font-bold">
+                    <div role="cell" class="w-[15%] pl-2 opacity-85">{{ $mov->created_at->format('d/m/Y H:i') }}</div>
+                    <div role="cell" class="w-[12%] text-center {{ $textClass }} font-bold">
                         <span aria-hidden="true">{!! $arrow !!}</span> {{ $typeLabel }}
                     </div>
-                    <div role="cell" class="w-[15%] text-center opacity-85">#{{ str_pad($mov->product_id, 3, '0', STR_PAD_LEFT) }}</div>
-                    <div role="cell" class="w-[40%] font-bold text-brand-yellow truncate pr-2">{{ $mov->product->name ?? 'Desconhecido' }}</div>
+                    <div role="cell" class="w-[28%] font-bold text-brand-yellow truncate pr-2">
+                        <span class="text-white/70 font-normal text-xs mr-1">#{{ str_pad($mov->product_id, 3, '0', STR_PAD_LEFT) }}</span>
+                        {{ $mov->product->name ?? 'Desconhecido' }}
+                    </div>
+                    <div role="cell" class="w-[20%] truncate pr-2 opacity-90">{{ $mov->user->name ?? 'Sistema' }}</div>
+                    <div role="cell" class="w-[15%] truncate pr-2 opacity-75 text-xs">{{ $mov->notes ?? '-' }}</div>
                     <div role="cell" class="w-[10%] text-right {{ $textClass }} font-black text-lg pr-4">{{ $sign }}{{ $mov->quantity_changed }}</div>
                 </div>
             @empty

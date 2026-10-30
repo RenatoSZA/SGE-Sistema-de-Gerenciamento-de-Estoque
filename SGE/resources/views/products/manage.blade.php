@@ -67,13 +67,19 @@
                 </div>
             </div>
 
-            @if(!isset($product))
-                <!-- Apenas na criação: Estoque Inicial -->
-                <div>
-                    <label for="product-quantity" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Estoque Inicial (Opcional)</label>
-                    <input id="product-quantity" type="number" name="quantity" value="{{ old('quantity', 0) }}" min="0" class="w-1/3 bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+            <!-- Linha 3: Estoque Mínimo e Estoque Inicial -->
+            <div class="flex flex-col md:flex-row gap-5">
+                <div class="flex-1">
+                    <label for="product-min-quantity" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Estoque Mínimo (Alerta)</label>
+                    <input id="product-min-quantity" type="number" name="min_quantity" value="{{ old('min_quantity', $product->min_quantity ?? 5) }}" required min="0" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
                 </div>
-            @endif
+                @if(!isset($product))
+                    <div class="flex-1">
+                        <label for="product-quantity" class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Estoque Inicial (Opcional)</label>
+                        <input id="product-quantity" type="number" name="quantity" value="{{ old('quantity', 0) }}" min="0" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-4 py-3 outline-none transition-colors font-medium">
+                    </div>
+                @endif
+            </div>
 
             <!-- Ações Form Principal -->
             <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-white/10">
@@ -118,6 +124,10 @@
                         <label for="adjust-quantity" class="sr-only">Quantidade para ajustar</label>
                         <input id="adjust-quantity" type="number" name="quantity" required min="1" placeholder="Qtd" class="w-24 bg-brand-brown border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white placeholder:text-white/60 rounded-lg px-4 py-2 outline-none transition-colors">
                     </div>
+                    <div class="flex-1 min-w-[180px]">
+                        <label for="adjust-notes" class="sr-only">Observação</label>
+                        <input id="adjust-notes" type="text" name="notes" maxlength="255" placeholder="Observação (opcional)" class="w-full bg-brand-brown border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white placeholder:text-white/60 rounded-lg px-4 py-2 outline-none transition-colors">
+                    </div>
                     <button type="submit" class="bg-brand-yellow text-brand-brown font-bold px-4 py-2 rounded-lg hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors">Ajustar</button>
                 </div>
             </form>
@@ -145,7 +155,7 @@
                             <span class="text-white/75 text-xs">{{ $mov->created_at->format('d/m/Y H:i') }}</span>
                         </div>
                         <div class="flex justify-between items-center text-white text-sm">
-                            <span class="opacity-90">Ajuste de Estoque</span>
+                            <span class="opacity-90 truncate pr-2">{{ $mov->notes ?: 'Ajuste de Estoque' }} ({{ $mov->user->name ?? 'Sistema' }})</span>
                             <span class="font-black {{ $isIn ? 'text-green-300' : 'text-red-300' }} text-base">{{ $isIn ? '+' : '-' }}{{ $mov->quantity_changed }}</span>
                         </div>
                     </div>

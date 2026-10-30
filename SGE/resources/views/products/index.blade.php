@@ -189,6 +189,11 @@
                 <input type="number" name="quantity" x-model="quantity" required min="1" class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white rounded-lg px-3 py-2 outline-none text-sm font-bold">
             </div>
 
+            <div>
+                <label class="block text-white/80 text-xs font-bold mb-1 uppercase tracking-wider">Observação / Justificativa (Opcional)</label>
+                <input type="text" name="notes" maxlength="255" placeholder="Ex: Reposição de fornecedor, uso interno..." class="w-full bg-white/5 border border-white/20 focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow text-white placeholder:text-white/50 rounded-lg px-3 py-2 outline-none text-sm font-medium">
+            </div>
+
             <div class="flex justify-end gap-3 mt-4 pt-3 border-t border-white/10">
                 <button type="button" @click="open = false" class="px-5 py-2 rounded-full font-bold text-white hover:bg-white/10 transition-colors text-sm">
                     Cancelar
