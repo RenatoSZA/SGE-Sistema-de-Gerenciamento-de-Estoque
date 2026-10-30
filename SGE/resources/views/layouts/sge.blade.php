@@ -45,14 +45,23 @@
                 <a href="{{ route('stock.history') }}" aria-label="Histórico de Movimentações" @if(request()->routeIs('stock.history')) aria-current="page" @endif class="w-12 h-12 rounded-xl transition-colors shadow-inner flex items-center justify-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow {{ request()->routeIs('stock.history') ? 'bg-brand-yellow text-brand-brown' : 'bg-brand-light-brown/90 hover:bg-brand-light-brown text-brand-brown opacity-85 group-hover:opacity-100 focus-visible:opacity-100' }}" title="Histórico">
                     <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path></svg>
                 </a>
-                <!-- 4. Funcionários -->
+                <!-- 4. Funcionários (Apenas Gerentes e Admins) -->
+                @if(auth()->user() && (auth()->user()->nivel_acesso === 'Admin' || auth()->user()->nivel_acesso === 'Gerente'))
                 <a href="{{ route('employees.index') }}" aria-label="Gerenciar Funcionários" @if(request()->routeIs('employees.*')) aria-current="page" @endif class="w-12 h-12 rounded-xl transition-colors shadow-inner flex items-center justify-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow {{ request()->routeIs('employees.*') ? 'bg-brand-yellow text-brand-brown' : 'bg-brand-light-brown/90 hover:bg-brand-light-brown text-brand-brown opacity-85 group-hover:opacity-100 focus-visible:opacity-100' }}" title="Funcionários">
                     <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
                 </a>
+                @endif
                 <!-- 5. Suporte -->
                 <a href="{{ route('support.index') }}" aria-label="Central de Suporte e FAQ" @if(request()->routeIs('support.*')) aria-current="page" @endif class="w-12 h-12 rounded-xl transition-colors shadow-inner flex items-center justify-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow {{ request()->routeIs('support.*') ? 'bg-brand-yellow text-brand-brown' : 'bg-brand-light-brown/90 hover:bg-brand-light-brown text-brand-brown opacity-85 group-hover:opacity-100 focus-visible:opacity-100' }}" title="Suporte">
                     <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
                 </a>
+                <!-- 6. Sair (Logout) -->
+                <form method="POST" action="{{ route('logout') }}" class="md:mt-auto flex items-center justify-center">
+                    @csrf
+                    <button type="submit" aria-label="Sair do sistema" class="w-12 h-12 rounded-xl transition-colors shadow-inner flex items-center justify-center bg-red-600/80 hover:bg-red-600 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow" title="Sair do sistema">
+                        <svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    </button>
+                </form>
             </nav>
         </aside>
         
