@@ -4,9 +4,9 @@
     $baseClasses = 'inline-flex items-center justify-center font-bold rounded-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-4';
     
     $variants = [
-        'primary' => 'bg-brand-yellow text-white hover:brightness-105 active:scale-95 focus:ring-brand-yellow/30 shadow-sm',
-        'secondary' => 'bg-brand-gray text-white hover:brightness-105 active:scale-95 focus:ring-brand-gray/30 shadow-sm',
-        'dark' => 'bg-brand-brown text-brand-yellow hover:brightness-105 active:scale-95 focus:ring-brand-brown/30 shadow-sm',
+        'primary' => 'bg-brand-yellow text-brand-brown hover:brightness-105 active:scale-95 focus:ring-brand-yellow/50 shadow-sm',
+        'secondary' => 'bg-brand-gray text-white hover:brightness-105 active:scale-95 focus:ring-brand-gray/50 shadow-sm',
+        'dark' => 'bg-brand-brown text-brand-yellow hover:brightness-105 active:scale-95 focus:ring-brand-brown/50 shadow-sm',
     ];
 
     $sizes = [
