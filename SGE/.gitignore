@@ -24,3 +24,4 @@ yarn-error.log
 /.zed
 ngrok.exe
 ngrok.zip
+*.sql

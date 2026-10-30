@@ -107,7 +107,7 @@ New-Item -ItemType File -Path database/database.sqlite -Force
 # No Linux / macOS:
 touch database/database.sqlite
 ```
-> **Opcional (MySQL / MariaDB via XAMPP):** Caso prefira usar MySQL, altere `DB_CONNECTION=mysql` no `.env`, descomente e configure `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`, ou importe o dump `database/CopiaBD.sql` no phpMyAdmin.
+> **Opcional (MySQL / MariaDB via XAMPP):** Caso prefira usar MySQL, altere `DB_CONNECTION=mysql` no `.env` e descomente/configure `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`.
 
 Em seguida, execute as migrações e popule o banco com os dados iniciais:
 ```bash
